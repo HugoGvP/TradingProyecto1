@@ -25,5 +25,5 @@ plt.legend()
 plt.title("Expected Revenue under Different Trading Scenarios")
 plt.show()
 
+pi_inf = 0.4
 
-pi_inf
