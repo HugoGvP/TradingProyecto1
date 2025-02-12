@@ -15,8 +15,6 @@ ask = p0 + 5
 
 funct = bid_ask.weibull(s_range, lambda_, k)
 
-
-
 plt.figure(figsize=(8, 5))
 plt.plot(s_range, funct, label="Liquidity Motivated Trades (Pi_I = 0)", linestyle="--")
 plt.xlabel("S")
