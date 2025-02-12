@@ -10,7 +10,7 @@ def p_inf_s(s):
     return pi_s
 
 def p_inf_b(b):
-    pi_b = max(0, min(0.5, 0.5 - 0.08* (s)))
+    pi_b = max(0, min(0.5, 0.5 - 0.08* (b)))
     return pi_b
 
 
@@ -22,4 +22,3 @@ def utility(bid, ask, p0, lambda_, k):
     loss = p_inf_s(bid) * lls + p_inf_b(ask) * llb
     utility = profit-loss
     return -utility
-
