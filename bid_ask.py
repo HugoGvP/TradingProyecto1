@@ -36,3 +36,6 @@ def optimize_bid_ask(p0, lambda_, k):
                       bounds=[(0, p0), (p0, 5 * p0)])
 
     return result.x
+
+
+
