@@ -3,22 +3,23 @@ import numpy as np
 from scipy.integrate import quad
 
 def weibull(s_range, lambda_, k):
-    return (k/lambda_) * (s_range/lambda_)**(k-1) * np.exp(-(s_range/lambda_)**k)
+    """ Calcula la distribución Weibull """
+    return (k / lambda_) * (s_range / lambda_)**(k - 1) * np.exp(-(s_range / lambda_)**k)
 
 def p_inf_s(s):
-    pi_s = max(0, min(0.5, 0.5 - 0.08* (s)))
-    return pi_s
+    """ Calcula la probabilidad informada p_inf_s con soporte de arrays NumPy """
+    return np.maximum(0, np.minimum(0.5, 0.5 - 0.08 * s))
 
 def p_inf_b(b):
-    pi_b = max(0, min(0.5, 0.5 - 0.08* (b)))
-    return pi_b
-
+    """ Calcula la probabilidad informada p_inf_b con soporte de arrays NumPy """
+    return np.maximum(0, np.minimum(0.5, 0.5 - 0.08 * b))
 
 def utility(bid, ask, p0, lambda_, k):
-    profit = p_inf_s(p0-bid) * (p0-bid) + p_inf_b(ask-p0) * (ask-p0)
-    lls, _ = quad(lambda s_range: (bid-p0) * weibull(s_range=s_range, lambda_ = lambda_, k=k), 0, bid)
-    llb, _ = quad(lambda s_range: (p0- ask) * weibull(s_range=s_range, lambda_ = lambda_, k=k), ask, np.inf)
+    """ Calcula la utilidad esperada para optimización del bid-ask spread """
+    profit = p_inf_s(p0 - bid) * (p0 - bid) + p_inf_b(ask - p0) * (ask - p0)
+
+    lls, _ = quad(lambda s_range: (bid - p0) * weibull(s_range, lambda_, k), 0, bid)
+    llb, _ = quad(lambda s_range: (p0 - ask) * weibull(s_range, lambda_, k), ask, np.inf)
 
     loss = p_inf_s(bid) * lls + p_inf_b(ask) * llb
-    utility = profit-loss
-    return -utility
+    return -(profit - loss)  # Se minimiza la utilidad negativa
