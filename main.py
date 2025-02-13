@@ -1,7 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import minimize
-from functools import partial
 import bid_ask as ba
 
 # ---- Parámetros ----
@@ -25,19 +23,9 @@ plt.legend()
 plt.title("Expected Revenue under Different Trading Scenarios")
 plt.show()
 
-# ---- Optimización del bid-ask spread ----
-def optimize_bid_ask(p0, lambda_, k):
-    """Optimiza el bid y ask spread para maximizar la utilidad."""
-    initial_params = [p0 * 0.85, p0 * 1.15]  # 15% abajo y arriba de p0
-    utility_func = partial(ba.utility, p0=p0, lambda_=lambda_, k=k)
 
-    result = minimize(lambda x: utility_func(x[0], x[1]),
-                      initial_params,
-                      bounds=[(0, p0), (p0, 5 * p0)])
 
-    return result.x
-
-bid_opt, ask_opt = optimize_bid_ask(p0, lambda_, k)
+bid_opt, ask_opt = ba.optimize_bid_ask(p0, lambda_, k)
 
 print(f"Optimal Bid: {bid_opt:.4f}")
 print(f"Optimal Ask: {ask_opt:.4f}")

@@ -1,6 +1,7 @@
 from scipy.optimize import minimize
 import numpy as np
 from scipy.integrate import quad
+from functools import partial
 
 def weibull(s_range, lambda_, k):
     """ Calcula la distribución Weibull """
@@ -23,3 +24,15 @@ def utility(bid, ask, p0, lambda_, k):
 
     loss = p_inf_s(bid) * lls + p_inf_b(ask) * llb
     return -(profit - loss)  # Se minimiza la utilidad negativa
+
+# ---- Optimización del bid-ask spread ----
+def optimize_bid_ask(p0, lambda_, k):
+    """Optimiza el bid y ask spread para maximizar la utilidad."""
+    initial_params = [p0 * 0.85, p0 * 1.15]  # 15% abajo y arriba de p0
+    utility_func = partial(utility, p0=p0, lambda_=lambda_, k=k)
+
+    result = minimize(lambda x: utility_func(x[0], x[1]),
+                      initial_params,
+                      bounds=[(0, p0), (p0, 5 * p0)])
+
+    return result.x
